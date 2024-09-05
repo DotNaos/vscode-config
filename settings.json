@@ -159,7 +159,6 @@
     },
     "tailwindCSS.experimental.configFile": null,
     "editor.fontWeight": "600",
-    "workbench.activityBar.location": "hidden",
     "workbench.statusBar.visible": false,
     "editor.inlineSuggest.suppressSuggestions": true,
     "codesnap.backgroundColor": "#FFC540",
@@ -193,11 +192,9 @@
     },
     "material-icon-theme.saturation": 0,
     "vscode_custom_css.imports": [
-
-
         // For Windows
-        "file:///C:\\Users\\schue\\Downloads\\custom-vscode.css",
-        "file:///C:\\Users\\schue\\Downloads\\vscode-script.js"
+        "https://raw.githubusercontent.com/DotNaos/vscode-config/main/custom-vscode.css",
+        "https://raw.githubusercontent.com/DotNaos/vscode-config/main/vscode-script.js"
     ],
     "workbench.iconTheme": "eq-material-theme-icons-light",
     "workbench.sideBar.location": "right",
