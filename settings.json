@@ -193,6 +193,8 @@
     "material-icon-theme.saturation": 0,
     "vscode_custom_css.imports": [
         // For Windows
+        // "file:///C:\\Users\\schue\\AppData\\Roaming\\Code\\User\\vscode-script.js",
+        // "file:///C:\\Users\\schue\\AppData\\Roaming\\Code\\User\\custom-vscode.css"
         "https://raw.githubusercontent.com/DotNaos/vscode-config/main/custom-vscode.css",
         "https://raw.githubusercontent.com/DotNaos/vscode-config/main/vscode-script.js"
     ],
@@ -200,5 +202,7 @@
     "workbench.sideBar.location": "right",
     "material-icon-theme.files.color": "#42a5f5",
     "workbench.tree.enableStickyScroll": false,
-    "workbench.colorTheme": "GrunBoxTheme"
+    "workbench.colorTheme": "GrunBoxTheme",
+    "git.autofetch": true,
+    "extensions.ignoreRecommendations": true
 }
