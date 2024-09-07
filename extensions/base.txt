@@ -31,3 +31,4 @@ tal7aouy.rainbow-bracket
 wayou.vscode-todo-highlight
 yzhang.markdown-all-in-one
 ziyasal.vscode-open-in-github
+aaron-bond.better-comments
