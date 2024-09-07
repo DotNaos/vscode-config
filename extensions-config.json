@@ -1,0 +1,11 @@
+{
+    "base": [
+      "extension1",
+      "extension2"
+    ],
+    "profiles": {
+      "Web": "web.txt",
+      "AI": "ai.txt",
+      ".NET": "dotnet.txt"
+    }
+}
