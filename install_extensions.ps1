@@ -121,7 +121,7 @@ function Update-SourceFiles {
     }
 
     # Get all remote extensions
-    $remoteExtensions = $config.base + ($config.profiles.PSObject.Properties | ForEach-Object { Get-ExtensionList -Source $_.Value })
+    $remoteExtensions = $config.profiles.PSObject.Properties | ForEach-Object { Get-ExtensionList -Source $_.Value }
 
     # Find new extensions
     $newExtensions = $installedExtensions | Where-Object { $remoteExtensions -notcontains $_ }
@@ -132,7 +132,7 @@ function Update-SourceFiles {
         $newExtensions | ForEach-Object { Write-Host "- $_" }
         Write-Host "`nLet's categorize these new extensions.`n"
 
-        $profiles = @("Base") + $config.profiles.PSObject.Properties.Name
+        $profiles = $config.profiles.PSObject.Properties.Name
         foreach ($extension in $newExtensions) {
             Write-Host "For extension: $extension"
             for ($i = 0; $i -lt $profiles.Count; $i++) {
@@ -142,24 +142,13 @@ function Update-SourceFiles {
 
             if ($choice -match '^\d+$' -and [int]$choice -le $profiles.Count) {
                 $profileName = $profiles[[int]$choice - 1]
-                if ($profileName -eq "Base") {
-                    $config.base += $extension
-                } else {
-                    $profileExtensions = Get-ExtensionList -Source $config.profiles.$profileName
-                    $profileExtensions += $extension
-                    Update-GitHubFile -Path "extensions/$($config.profiles.$profileName)" -Content ($profileExtensions -join "`n") -Message "Add $extension to $profileName profile"
-                }
+                $profileExtensions = Get-ExtensionList -Source $config.profiles.$profileName
+                $profileExtensions += $extension
+                Update-GitHubFile -Path "extensions/$($config.profiles.$profileName)" -Content ($profileExtensions -join "`n") -Message "Add $extension to $profileName profile"
             } else {
                 Write-Host "Invalid choice. Extension will not be categorized."
             }
         }
-
-        # Update base extensions file
-        Update-GitHubFile -Path "extensions/base.txt" -Content ($config.base -join "`n") -Message "Update base extensions"
-
-        # Update config.json with new base extensions
-        $updatedConfig = $config | ConvertTo-Json -Depth 10
-        Update-GitHubFile -Path "config.json" -Content $updatedConfig -Message "Update config with new base extensions"
     } else {
         Write-Host "No new extensions detected."
     }
@@ -173,18 +162,16 @@ function Show-MainMenu {
     while ($true) {
         Write-Host "`n=== VSCode Extension Manager ==="
         Write-Host "1. List Profiles"
-        Write-Host "2. List Base Extensions"
-        Write-Host "3. Install Extensions"
-        Write-Host "4. Update Source Files from Installed Extensions"
-        Write-Host "5. Exit"
+        Write-Host "2. Install Extensions"
+        Write-Host "3. Update Source Files from Installed Extensions"
+        Write-Host "4. Exit"
         $choice = Read-Host "Enter your choice"
 
         switch ($choice) {
             "1" { List-Profiles $config }
-            "2" { List-BaseExtensions $config }
-            "3" { Install-ProfileExtensions $config }
-            "4" { Update-SourceFiles }
-            "5" { return }
+            "2" { Install-ProfileExtensions $config }
+            "3" { Update-SourceFiles }
+            "4" { return }
             default { Write-Host "Invalid choice. Please try again." }
         }
     }
@@ -198,15 +185,9 @@ function List-Profiles ($config) {
     }
 }
 
-# List Base Extensions
-function List-BaseExtensions ($config) {
-    Write-Host "`n=== Base Extensions ==="
-    $config.base | ForEach-Object { Write-Host $_ }
-}
-
 # Install extensions from profiles
 function Install-ProfileExtensions ($config) {
-    $profiles = @("Base") + $config.profiles.PSObject.Properties.Name
+    $profiles = $config.profiles.PSObject.Properties.Name
     Write-Host "`nAvailable Profiles:"
     for ($i = 0; $i -lt $profiles.Count; $i++) {
         Write-Host "$($i + 1). $($profiles[$i])"
@@ -214,7 +195,7 @@ function Install-ProfileExtensions ($config) {
     $choice = Read-Host "Enter profile number (or 'all' for all profiles)"
 
     if ($choice -eq 'all') {
-        $allExtensions = $config.base
+        $allExtensions = @()
         foreach ($profile in $config.profiles.PSObject.Properties) {
             $extensions = Get-ExtensionList -Source $profile.Value
             if ($extensions) {
@@ -225,14 +206,10 @@ function Install-ProfileExtensions ($config) {
     }
     elseif ($choice -match '^\d+$' -and [int]$choice -le $profiles.Count) {
         $profileName = $profiles[[int]$choice - 1]
-        if ($profileName -eq "Base") {
-            Install-Extensions -Extensions $config.base
-        } else {
-            $source = $config.profiles.$profileName
-            $extensions = Get-ExtensionList -Source $source
-            if ($extensions) {
-                Install-Extensions -Extensions ($config.base + $extensions | Select-Object -Unique)
-            }
+        $source = $config.profiles.$profileName
+        $extensions = Get-ExtensionList -Source $source
+        if ($extensions) {
+            Install-Extensions -Extensions $extensions
         }
     }
     else {
