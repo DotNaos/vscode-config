@@ -139,6 +139,5 @@ function Install-ProfileExtensions ($config) {
         Write-Host "Invalid choice."
     }
 }
-
 # Run the main menu
 Show-MainMenu
