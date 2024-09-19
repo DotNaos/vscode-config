@@ -45,6 +45,7 @@
     // Typography
     "editor.fontFamily": "FiraCode Nerd Font Mono",
     "terminal.integrated.fontFamily": "FiraCode Nerd Font ",
+        "terminal.integrated.fontWeight": "600",
     "editor.suggestFontSize": 16,
     "editor.suggestLineHeight": 30,
     "terminal.integrated.lineHeight": 1.5,
